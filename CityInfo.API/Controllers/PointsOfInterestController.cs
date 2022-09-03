@@ -80,7 +80,13 @@ public class PointsOfInterestController : ControllerBase
         
         return NoContent();
     }
-
+    
+    
+    /**
+     * This Patch endpoint uses the following packages for Patch protocols:
+     * "Microsoft.AspNetCore.JsonPatch" Version="6.0.8"
+     * "Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.8"
+     */
     [HttpPatch("{pointOfInterestId:int}")]
     public ActionResult PartiallyUpdatePointOfInterest(int cityId, int pointOfInterestId, JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
     {
@@ -89,9 +95,7 @@ public class PointsOfInterestController : ControllerBase
         if (city == null)
             return NotFound();
 
-        var pointOfInterest = city
-            .PointsOfInterest
-            .SingleOrDefault(x => x.Id == pointOfInterestId);
+        var pointOfInterest = city.PointsOfInterest.SingleOrDefault(x => x.Id == pointOfInterestId);
 
         if (pointOfInterest == null)
             return NotFound();
@@ -107,6 +111,7 @@ public class PointsOfInterestController : ControllerBase
         //This only checks the modelstate of the JSONPatchDocuemnt. Does not check model state of the object to patch.
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
+        
         //To validate the object that is being patched with new values, do below.
         if (!TryValidateModel(pointOfInterestToPatch))
         {
@@ -116,6 +121,24 @@ public class PointsOfInterestController : ControllerBase
         pointOfInterest.Name = pointOfInterestToPatch.Name;
         pointOfInterest.Description = pointOfInterestToPatch.Description;
         
+        return NoContent();
+    }
+
+    [HttpDelete("{pointOfInterestId:int}")]
+    public ActionResult DeletePointOfInterest(int cityId, int pointOfInterestId)
+    {
+        var city = CitiesDataStore.Current.Cities.SingleOrDefault(x => x.Id == cityId);
+
+        if (city == null)
+            return NotFound();
+
+        var pointOfInterest = city.PointsOfInterest.SingleOrDefault(x => x.Id == pointOfInterestId);
+
+        if (pointOfInterest == null)
+            return NotFound();
+
+        city.PointsOfInterest.Remove(pointOfInterest);
+
         return NoContent();
     }
 }
