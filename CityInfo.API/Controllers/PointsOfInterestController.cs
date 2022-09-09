@@ -8,6 +8,11 @@ namespace CityInfo.API.Controllers;
 [Route("api/cities/{cityId:int}/[controller]")]
 public class PointsOfInterestController : ControllerBase
 {
+    private readonly ILogger<PointsOfInterestController> _logger;
+
+    public PointsOfInterestController(ILogger<PointsOfInterestController> logger) =>
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
     [HttpGet]
     public ActionResult<IEnumerable<PointOfInterestDto>> GetPointsOfInterest(int cityId)
     {
@@ -17,7 +22,8 @@ public class PointsOfInterestController : ControllerBase
         {
             return Ok(city.PointsOfInterest);
         }
-
+        
+        _logger.LogInformation($"City '{cityId}' could not be found.");
         return NotFound();
     }
 
@@ -61,7 +67,7 @@ public class PointsOfInterestController : ControllerBase
             },
             newPointOfInterest);
     }
-    
+
     [HttpPut("{pointOfInterestId:int}")]
     public ActionResult UpdatePointOfInterest(int cityId, int pointOfInterestId, PointOfInterestForUpdateDto updateDto)
     {
@@ -77,18 +83,19 @@ public class PointsOfInterestController : ControllerBase
 
         pointOfInterest.Name = updateDto.Name;
         pointOfInterest.Description = updateDto.Description;
-        
+
         return NoContent();
     }
-    
-    
+
+
     /**
      * This Patch endpoint uses the following packages for Patch protocols:
      * "Microsoft.AspNetCore.JsonPatch" Version="6.0.8"
      * "Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.8"
      */
     [HttpPatch("{pointOfInterestId:int}")]
-    public ActionResult PartiallyUpdatePointOfInterest(int cityId, int pointOfInterestId, JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
+    public ActionResult PartiallyUpdatePointOfInterest(int cityId, int pointOfInterestId,
+        JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
     {
         var city = CitiesDataStore.Current.Cities.SingleOrDefault(x => x.Id == cityId);
 
@@ -105,13 +112,13 @@ public class PointsOfInterestController : ControllerBase
             Description = pointOfInterest.Description,
             Name = pointOfInterest.Name
         };
-        
+
         patchDocument.ApplyTo(pointOfInterestToPatch, ModelState);
-        
+
         //This only checks the modelstate of the JSONPatchDocuemnt. Does not check model state of the object to patch.
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-        
+
         //To validate the object that is being patched with new values, do below.
         if (!TryValidateModel(pointOfInterestToPatch))
         {
@@ -120,7 +127,7 @@ public class PointsOfInterestController : ControllerBase
 
         pointOfInterest.Name = pointOfInterestToPatch.Name;
         pointOfInterest.Description = pointOfInterestToPatch.Description;
-        
+
         return NoContent();
     }
 
