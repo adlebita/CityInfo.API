@@ -1,6 +1,13 @@
 using Microsoft.AspNetCore.StaticFiles;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, provider, configuration) =>
+{
+    configuration.WriteTo.Console();
+    configuration.WriteTo.File("Logs/cityinfo.txt", rollingInterval: RollingInterval.Day);
+});
 
 // Add services to the container.
 
@@ -9,8 +16,6 @@ builder.Services.AddControllers(options =>
         options.ReturnHttpNotAcceptable = true;
     })
     .AddNewtonsoftJson();
-
-
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
