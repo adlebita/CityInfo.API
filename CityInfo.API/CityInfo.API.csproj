@@ -26,4 +26,17 @@
       <Folder Include="Logs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Models\CityDto.cs" />
+      <Compile Remove="Models\PointOfInterestForUpdateDto.cs" />
+      <Compile Remove="Models\PointOfInterestCreationDto.cs" />
+      <Compile Remove="Models\PointOfInterestDto.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Services\IMailService.cs">
+        <DependentUpon>LocalMailService.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>
