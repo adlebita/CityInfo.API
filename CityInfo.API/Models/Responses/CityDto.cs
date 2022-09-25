@@ -1,4 +1,4 @@
-namespace CityInfo.API.Models;
+namespace CityInfo.API.Models.Responses;
 
 public class CityDto
 {

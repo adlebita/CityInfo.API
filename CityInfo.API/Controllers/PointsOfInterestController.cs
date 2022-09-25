@@ -1,4 +1,5 @@
-using CityInfo.API.Models;
+using CityInfo.API.Models.Requests;
+using CityInfo.API.Models.Responses;
 using CityInfo.API.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;

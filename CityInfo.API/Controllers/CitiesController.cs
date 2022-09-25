@@ -1,4 +1,4 @@
-using CityInfo.API.Models;
+using CityInfo.API.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers;
