@@ -2,6 +2,7 @@ using CityInfo.API;
 using CityInfo.API.Database;
 using CityInfo.API.Services;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +22,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<IMailService, LocalMailService>();
 builder.Services.AddSingleton<CitiesDataStore>();
-builder.Services.AddDbContext<CityInfoContext>();
+
+/*
+ * Connection string: https://learn.microsoft.com/en-us/aspnet/mvc/overview/getting-started/introduction/creating-a-connection-string
+ */
+builder.Services.AddDbContext<CityInfoContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("CityInfoContext");
+    options.UseSqlServer(connectionString);
+});
 
 var app = builder.Build();
 
