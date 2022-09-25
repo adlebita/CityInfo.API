@@ -17,9 +17,4 @@ public class City
     public string? Description { get; set; }
 
     public ICollection<PointOfInterest> PointsOfInterest { get; set; } = new List<PointOfInterest>();
-
-    public City(string name)
-    {
-        Name = name;
-    }
 }

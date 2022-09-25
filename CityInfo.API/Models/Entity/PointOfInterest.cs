@@ -5,7 +5,7 @@ namespace CityInfo.API.Models.Entity;
 
 public class PointOfInterest
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     
     [Required]
     [MaxLength(50)]
@@ -16,9 +16,4 @@ public class PointOfInterest
     
     [MaxLength(200)]
     public string? Description { get; set; }
-
-    public PointOfInterest(string name)
-    {
-        Name = name;
-    }
 }
