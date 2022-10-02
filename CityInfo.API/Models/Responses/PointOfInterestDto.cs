@@ -2,7 +2,7 @@ namespace CityInfo.API.Models.Responses;
 
 public class PointOfInterestDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public string Name { get; set; } = string.Empty;
     

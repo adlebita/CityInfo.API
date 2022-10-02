@@ -8,8 +8,7 @@ public class CityDto
 
     public string? Description { get; set; }
 
-    public ICollection<PointOfInterestDto> PointsOfInterest { get; set; } = new List<PointOfInterestDto>();
+    public IEnumerable<PointOfInterestDto> PointsOfInterest { get; set; } = new List<PointOfInterestDto>();
 
-    public int NumberOfPointsOfInterest => PointsOfInterest.Count;
-
+    public int NumberOfPointsOfInterest => PointsOfInterest.Count();
 }
