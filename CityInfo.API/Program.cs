@@ -21,7 +21,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<IMailService, LocalMailService>();
-builder.Services.AddSingleton<CitiesDataStore>();
 
 /*
  * Connection string: https://learn.microsoft.com/en-us/aspnet/mvc/overview/getting-started/introduction/creating-a-connection-string
