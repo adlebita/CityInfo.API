@@ -18,17 +18,17 @@ public class CitiesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CityDto>>> GetCities()
     {
-        return Ok(await _cityInfoRespository.GetCitiesAsync());
+        return Ok(await _cityInfoRespository.GetCities());
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<CityDto>> GetCity(string id)
+    public async Task<ActionResult<CityDto>> GetCity(Guid id)
     {
-        var city = await _cityInfoRespository.GetCityByIdAsync(Guid.Parse(id));
+        var city = await _cityInfoRespository.GetCityById(id);
         
         if (city == null)
         {
-            return NotFound(city);
+            return NotFound();
         }
 
         return Ok(city);
