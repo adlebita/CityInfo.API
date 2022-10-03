@@ -1,4 +1,5 @@
 using CityInfo.API.Models.Responses;
+using CityInfo.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers;
@@ -7,28 +8,29 @@ namespace CityInfo.API.Controllers;
 [Route("api/[controller]")]
 public class CitiesController : ControllerBase
 {
-    private readonly CitiesDataStore _citiesDataStore;
+    private readonly ICityInfoRespository _cityInfoRespository;
 
-    public CitiesController(CitiesDataStore citiesDataStore)
+    public CitiesController(ICityInfoRespository cityInfoRespository)
     {
-        _citiesDataStore = citiesDataStore;
+        _cityInfoRespository = cityInfoRespository;
     }
     
     [HttpGet]
-    public ActionResult<IEnumerable<CityDto>> GetCities()
+    public async Task<ActionResult<IEnumerable<CityDto>>> GetCities()
     {
-        return Ok(_citiesDataStore.Cities);
+        return Ok(await _cityInfoRespository.GetCities());
     }
 
     [HttpGet("{id}")]
-    public ActionResult<CityDto> GetCity(int id)
+    public async Task<ActionResult<CityDto>> GetCity(Guid id)
     {
-        var city = _citiesDataStore.Cities.FirstOrDefault(x => x.Id == id);
-        if (city != null)
+        var city = await _cityInfoRespository.GetCityById(id);
+        
+        if (city == null)
         {
-            return Ok(city);
+            return NotFound();
         }
 
-        return NotFound();
+        return Ok(city);
     }
 }

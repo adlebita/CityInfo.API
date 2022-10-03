@@ -1,10 +1,6 @@
 namespace CityInfo.API.Models.Responses;
 
-public class PointOfInterestDto
+public sealed record PointOfInterestDto(Guid Id, string Name)
 {
-    public int Id { get; set; }
-
-    public string Name { get; set; } = string.Empty;
-    
     public string? Description { get; set; }
 }

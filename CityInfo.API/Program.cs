@@ -1,4 +1,3 @@
-using CityInfo.API;
 using CityInfo.API.Database;
 using CityInfo.API.Services;
 using Microsoft.AspNetCore.StaticFiles;
@@ -21,7 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<IMailService, LocalMailService>();
-builder.Services.AddSingleton<CitiesDataStore>();
+builder.Services.AddScoped<ICityInfoRespository, CityInfoRepository>();
 
 /*
  * Connection string: https://learn.microsoft.com/en-us/aspnet/mvc/overview/getting-started/introduction/creating-a-connection-string
