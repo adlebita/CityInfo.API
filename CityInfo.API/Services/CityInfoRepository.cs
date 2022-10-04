@@ -70,6 +70,6 @@ public sealed class CityInfoRepository : ICityInfoRespository
 
     public async Task<bool> DoesCityExist(Guid cityId)
     {
-        return await _db.Cities.FirstOrDefaultAsync(c => c.Id == cityId) != null;
+        return await _db.Cities.AnyAsync(c => c.Id == cityId);
     }
 }

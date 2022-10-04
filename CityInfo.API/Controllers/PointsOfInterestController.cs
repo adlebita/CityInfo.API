@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CityInfo.API.Controllers;
 
 [ApiController]
-[Route("api/cities/{cityId:int}/[controller]")]
+[Route("api/cities/{cityId:guid}/[controller]")]
 public class PointsOfInterestController : ControllerBase
 {
     private readonly ILogger<PointsOfInterestController> _logger;
@@ -29,7 +29,7 @@ public class PointsOfInterestController : ControllerBase
 
         if (cityExists == false)
         {
-            _logger.LogInformation($"City '{cityId}' could not be found.");
+            _logger.LogError($"City '{cityId}' could not be found.");
             return NotFound();
         }
 
