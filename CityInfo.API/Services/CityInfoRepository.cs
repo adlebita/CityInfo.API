@@ -1,4 +1,6 @@
 using CityInfo.API.Database;
+using CityInfo.API.Models.Entity;
+using CityInfo.API.Models.Requests;
 using CityInfo.API.Models.Responses;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +21,8 @@ public sealed class CityInfoRepository : ICityInfoRespository
 
         if (city == null) return null;
 
-        var pointOfInterestDtos = city.PointsOfInterest.Select(poi => new PointOfInterestDto(poi.Id, poi.Name){ Description = poi.Description});
+        var pointOfInterestDtos = city.PointsOfInterest
+            .Select(poi => new PointOfInterestDto(poi.Id, poi.Name){ Description = poi.Description});
 
         return new CityDto(city.Id, city.Name, pointOfInterestDtos)
         {
@@ -66,6 +69,40 @@ public sealed class CityInfoRepository : ICityInfoRespository
         return pois.Count == 0
             ? Enumerable.Empty<PointOfInterestDto>()
             : pois.Select(poi => new PointOfInterestDto(poi.Id, poi.Name) {Description = poi.Description});
+    }
+
+    public async Task<PointOfInterestDto> CreateNewPointOfInterest(Guid cityId, CreatePointOfInterestDto createPointOfInterestDto)
+    {
+        var newPointOfInterest = new PointOfInterest
+        {
+            Name = createPointOfInterestDto.Name,
+            Description = createPointOfInterestDto.Description,
+            CityId = cityId
+        };
+
+        await _db.PointsOfInterests.AddAsync(newPointOfInterest);
+        await _db.SaveChangesAsync();
+
+        return new PointOfInterestDto(newPointOfInterest.Id, newPointOfInterest.Name){ Description = newPointOfInterest.Description};
+    }
+
+    public async Task UpdatePointOfInterest(UpdatePointOfInterestDto updatePointOfInterestDto)
+    {
+        var existingPoi = await 
+            _db.PointsOfInterests
+            .SingleOrDefaultAsync(poi => poi.Id == updatePointOfInterestDto.Id);
+
+        ArgumentNullException.ThrowIfNull(existingPoi, nameof(existingPoi.Id));
+
+        existingPoi.Name = updatePointOfInterestDto.Name;
+        existingPoi.Description = updatePointOfInterestDto.Description;
+        
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task<bool> DoesPointOfInterestExist(Guid poiId)
+    {
+        return await _db.PointsOfInterests.AnyAsync(poi => poi.Id == poiId);
     }
 
     public async Task<bool> DoesCityExist(Guid cityId)
