@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CityInfo.API.Models.Requests;
 
-public class PointOfInterestCreationDto
+public class CreatePointOfInterestDto
 {
     [Required]
     [MaxLength(50)]

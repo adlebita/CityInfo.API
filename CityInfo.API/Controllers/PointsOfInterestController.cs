@@ -1,3 +1,4 @@
+using CityInfo.API.Models.Entity;
 using CityInfo.API.Models.Requests;
 using CityInfo.API.Models.Responses;
 using CityInfo.API.Services;
@@ -41,55 +42,43 @@ public class PointsOfInterestController : ControllerBase
     public async Task<ActionResult<PointOfInterestDto>> GetPointOfInterestById(Guid _, Guid pointOfInterestId)
     {
         var pointOfInterest = await _cityInfoRespository.GetPointOfInterestById(pointOfInterestId);
-        
+
         return pointOfInterest != null ? Ok(pointOfInterest) : NotFound();
     }
 
-    // [HttpPost]
-    // public ActionResult<PointOfInterestDto> CreatePointOfInterest(Guid cityId,
-    //     [FromBody] PointOfInterestCreationDto pointOfInterestCreationDto)
-    // {
-    //     var city = _citiesDataStore.Cities.FirstOrDefault(x => x.Id == cityId);
-    //     if (city == null) return NotFound();
-    //
-    //     var newId = _citiesDataStore.Cities.SelectMany(c => c.PointsOfInterest).Max(p => p.Id);
-    //
-    //     var newPointOfInterest = new PointOfInterestDto
-    //     {
-    //         Id = ++newId,
-    //         Name = pointOfInterestCreationDto.Name,
-    //         Description = pointOfInterestCreationDto.Description
-    //     };
-    //
-    //     city.PointsOfInterest.Add(newPointOfInterest);
-    //
-    //     return CreatedAtRoute("GetPointOfInterest",
-    //         new
-    //         {
-    //             cityId = city.Id,
-    //             pointOfInterestId = newPointOfInterest.Id
-    //         },
-    //         newPointOfInterest);
-    // }
-    //
-    // [HttpPut("{pointOfInterestId:int}")]
-    // public ActionResult UpdatePointOfInterest(int cityId, int pointOfInterestId, PointOfInterestForUpdateDto updateDto)
-    // {
-    //     var city = _citiesDataStore.Cities.SingleOrDefault(x => x.Id == cityId);
-    //
-    //     if (city == null)
-    //         return NotFound();
-    //
-    //     var pointOfInterest = city.PointsOfInterest.SingleOrDefault(x => x.Id == pointOfInterestId);
-    //
-    //     if (pointOfInterest == null)
-    //         return NotFound();
-    //
-    //     pointOfInterest.Name = updateDto.Name;
-    //     pointOfInterest.Description = updateDto.Description;
-    //
-    //     return NoContent();
-    // }
+    [HttpPost]
+    public async Task<ActionResult<PointOfInterestDto>> CreatePointOfInterest(Guid cityId,
+        [FromBody] CreatePointOfInterestDto createPointOfInterestDto)
+    {
+        var cityExists = await _cityInfoRespository.GetCityById(cityId);
+
+        if (cityExists == null) return NotFound();
+
+        var newPoI =
+            await _cityInfoRespository.CreateNewPointOfInterest(cityId, createPointOfInterestDto);
+
+        return CreatedAtRoute("GetPointOfInterest", new {cityId, pointOfInterestId = newPoI.Id}, newPoI);
+    }
+    
+    [HttpPut("{pointOfInterestId:Guid}")]
+    public async Task<ActionResult> UpdatePointOfInterest(UpdatePointOfInterestDto updatePointOfInterestDto, Guid cityId, Guid pointOfInterestId)
+    {
+        var doesPoIExist = await _cityInfoRespository.DoesPointOfInterestExist(updatePointOfInterestDto.Id);
+
+        if (doesPoIExist == false)
+        {
+            return NotFound();
+        }
+
+        updatePointOfInterestDto.Id = pointOfInterestId;
+        await _cityInfoRespository.UpdatePointOfInterest(updatePointOfInterestDto);
+    
+        return NoContent();
+    }
+    
+    
+    
+    
     //
     //
     // /**

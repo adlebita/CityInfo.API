@@ -1,8 +1,8 @@
 namespace CityInfo.API.Models.Requests;
 
-public class PointOfInterestForUpdateDto
+public class UpdatePointOfInterestDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     
     public string Name { get; set; } = string.Empty;
     
