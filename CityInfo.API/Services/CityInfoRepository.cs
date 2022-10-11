@@ -110,6 +110,17 @@ public sealed class CityInfoRepository : ICityInfoRespository
         await _db.SaveChangesAsync();
     }
 
+    public async Task UpdatePointOfInterestDescription(Guid pointOfInterestId,
+        UpdatePointOfInterestDescriptionDto updatePointOfInterestDescriptionDto)
+    {
+        var poi = await _db.PointsOfInterests.SingleOrDefaultAsync(poi => poi.Id == pointOfInterestId);
+        
+        ArgumentNullException.ThrowIfNull(poi, nameof(poi.Id));
+
+        poi.Description = updatePointOfInterestDescriptionDto.Description;
+        await _db.SaveChangesAsync();
+    }
+
     public async Task<bool> DoesPointOfInterestExist(Guid poiId)
     {
         return await _db.PointsOfInterests.AnyAsync(poi => poi.Id == poiId);

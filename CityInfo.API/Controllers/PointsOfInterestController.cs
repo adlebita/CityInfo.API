@@ -2,7 +2,6 @@ using CityInfo.API.Models.Entity;
 using CityInfo.API.Models.Requests;
 using CityInfo.API.Models.Responses;
 using CityInfo.API.Services;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers;
@@ -86,13 +85,26 @@ public class PointsOfInterestController : ControllerBase
     
         return NoContent();
     }
-    
-    
-    
-    
-    //
-    //
+
+    [HttpPatch("{pointOfInterestId:Guid}")]
+    public async Task<ActionResult> UpdatePointOfInterestDescription(Guid pointOfInterestId, UpdatePointOfInterestDescriptionDto updatePointOfInterestDescriptionDto)
+    {
+        var doesPoIExist = await _cityInfoRespository.DoesPointOfInterestExist(pointOfInterestId);
+
+        if (doesPoIExist == false) return NotFound();
+
+        await _cityInfoRespository.UpdatePointOfInterestDescription(pointOfInterestId, updatePointOfInterestDescriptionDto);
+
+        return NoContent();
+    }
+
     // /**
+    //  * 12/10/2022 - I don't like this method of patching. See UpdatePoIDescription action method instead for implementation
+    //  * of HTTP Patch. Have left this in for reference. Consider using PATCH, if necessary and ideally for entities with 
+    //  * properties that can be patched... but for this project is too cumbersome. Remember, using PUT instead of PATCH while no
+    //  * no one will pull up for it, it's not in line with REST API architecture.
+    //  * https://stackoverflow.com/questions/19732423/why-isnt-http-put-allowed-to-do-partial-updates-in-a-rest-api
+    //  *
     //  * This Patch endpoint uses the following packages for Patch protocols:
     //  * "Microsoft.AspNetCore.JsonPatch" Version="6.0.8"
     //  * "Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.8"
