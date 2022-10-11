@@ -86,17 +86,27 @@ public sealed class CityInfoRepository : ICityInfoRespository
         return new PointOfInterestDto(newPointOfInterest.Id, newPointOfInterest.Name){ Description = newPointOfInterest.Description};
     }
 
-    public async Task UpdatePointOfInterest(UpdatePointOfInterestDto updatePointOfInterestDto)
+    public async Task UpdatePointOfInterest(Guid pointOfInterestId, UpdatePointOfInterestDto updatePointOfInterestDto)
     {
         var existingPoi = await 
             _db.PointsOfInterests
-            .SingleOrDefaultAsync(poi => poi.Id == updatePointOfInterestDto.Id);
+            .SingleOrDefaultAsync(poi => poi.Id == pointOfInterestId);
 
         ArgumentNullException.ThrowIfNull(existingPoi, nameof(existingPoi.Id));
 
         existingPoi.Name = updatePointOfInterestDto.Name;
         existingPoi.Description = updatePointOfInterestDto.Description;
         
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task DeletePointOfInterest(Guid pointOfInterestId)
+    {
+        var poi = await _db.PointsOfInterests.SingleOrDefaultAsync(poi => poi.Id == pointOfInterestId);
+        
+        ArgumentNullException.ThrowIfNull(poi, nameof(poi.Id));
+
+        _db.PointsOfInterests.Remove(poi);
         await _db.SaveChangesAsync();
     }
 

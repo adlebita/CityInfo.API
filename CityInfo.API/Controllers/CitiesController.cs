@@ -26,10 +26,7 @@ public class CitiesController : ControllerBase
     {
         var city = await _cityInfoRespository.GetCityById(id);
         
-        if (city == null)
-        {
-            return NotFound();
-        }
+        if (city == null) return NotFound();
 
         return Ok(city);
     }

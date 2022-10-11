@@ -30,7 +30,8 @@ public class PointsOfInterestController : ControllerBase
 
         if (cityExists == false)
         {
-            _logger.LogError($"City '{cityId}' could not be found.");
+            //Todo: Implement proper pipeline logging with SeriLog
+            _logger.LogError($"City '{cityId}' could not be found."); 
             return NotFound();
         }
 
@@ -63,15 +64,25 @@ public class PointsOfInterestController : ControllerBase
     [HttpPut("{pointOfInterestId:Guid}")]
     public async Task<ActionResult> UpdatePointOfInterest(UpdatePointOfInterestDto updatePointOfInterestDto, Guid cityId, Guid pointOfInterestId)
     {
-        var doesPoIExist = await _cityInfoRespository.DoesPointOfInterestExist(updatePointOfInterestDto.Id);
+        var doesPoIExist = await _cityInfoRespository.DoesPointOfInterestExist(pointOfInterestId);
 
-        if (doesPoIExist == false)
-        {
-            return NotFound();
-        }
+        if (doesPoIExist == false) return NotFound();
+        
+        await _cityInfoRespository.UpdatePointOfInterest(pointOfInterestId, updatePointOfInterestDto);
+    
+        return NoContent();
+    }
+    
+    [HttpDelete("{pointOfInterestId:Guid}")]
+    public async Task<ActionResult> DeletePointOfInterest(Guid cityId, Guid pointOfInterestId)
+    {
+        var doesPoIExist = await _cityInfoRespository.DoesPointOfInterestExist(pointOfInterestId);
 
-        updatePointOfInterestDto.Id = pointOfInterestId;
-        await _cityInfoRespository.UpdatePointOfInterest(updatePointOfInterestDto);
+        if (doesPoIExist == false) return NotFound();
+
+        await _cityInfoRespository.DeletePointOfInterest(pointOfInterestId);
+        
+        _mailService.Send("PoI Deleted", $"Point of Interest Id: {pointOfInterestId} was deleted.");
     
         return NoContent();
     }
@@ -124,22 +135,5 @@ public class PointsOfInterestController : ControllerBase
     //     return NoContent();
     // }
     //
-    // [HttpDelete("{pointOfInterestId:int}")]
-    // public ActionResult DeletePointOfInterest(int cityId, int pointOfInterestId)
-    // {
-    //     var city = _citiesDataStore.Cities.SingleOrDefault(x => x.Id == cityId);
-    //
-    //     if (city == null)
-    //         return NotFound();
-    //
-    //     var pointOfInterest = city.PointsOfInterest.SingleOrDefault(x => x.Id == pointOfInterestId);
-    //
-    //     if (pointOfInterest == null)
-    //         return NotFound();
-    //
-    //     city.PointsOfInterest.Remove(pointOfInterest);
-    //     _mailService.Send("PoI Deleted", $"Point of Interest Id: {pointOfInterestId} was deleted from {city.Name}");
-    //
-    //     return NoContent();
-    // }
+    
 }
