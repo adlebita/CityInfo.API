@@ -1,25 +1,21 @@
 using CityInfo.API.Database;
 using CityInfo.API.Services;
-using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, provider, configuration) =>
+builder.Host.UseSerilog((_, _, configuration) =>
 {
     configuration.WriteTo.Console();
     configuration.WriteTo.File("Logs/cityinfo.txt", rollingInterval: RollingInterval.Day);
 });
 
 // Add services to the container.
-builder.Services.AddControllers(options => { options.ReturnHttpNotAcceptable = true; })
-    .AddNewtonsoftJson();
+builder.Services.AddControllers(options => { options.ReturnHttpNotAcceptable = true; });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
-builder.Services.AddTransient<IMailService, LocalMailService>();
 builder.Services.AddScoped<ICityInfoRespository, CityInfoRepository>();
 
 /*

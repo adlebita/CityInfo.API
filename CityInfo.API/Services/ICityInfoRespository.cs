@@ -8,6 +8,8 @@ public interface ICityInfoRespository
     public Task<CityDto?> GetCityById(Guid cityId);
     
     public Task<IEnumerable<CityDto>> GetCities();
+    
+    public Task<IEnumerable<CityDto>> GetCitiesWithFilter(CitiesFilterDto citiesFilter);
 
     public Task<PointOfInterestDto?> GetPointOfInterestById(Guid pointOfInterestId);
     
