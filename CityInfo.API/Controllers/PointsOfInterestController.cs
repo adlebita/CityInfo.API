@@ -1,8 +1,6 @@
-using CityInfo.API.Models.Entity;
 using CityInfo.API.Models.Requests;
 using CityInfo.API.Models.Responses;
 using CityInfo.API.Services;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers;
@@ -12,14 +10,11 @@ namespace CityInfo.API.Controllers;
 public class PointsOfInterestController : ControllerBase
 {
     private readonly ILogger<PointsOfInterestController> _logger;
-    private readonly IMailService _mailService;
     private readonly ICityInfoRespository _cityInfoRespository;
 
-    public PointsOfInterestController(ILogger<PointsOfInterestController> logger, IMailService mailService,
-        ICityInfoRespository cityInfoRespository)
+    public PointsOfInterestController(ILogger<PointsOfInterestController> logger, ICityInfoRespository cityInfoRespository)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
         _cityInfoRespository = cityInfoRespository;
     }
 
