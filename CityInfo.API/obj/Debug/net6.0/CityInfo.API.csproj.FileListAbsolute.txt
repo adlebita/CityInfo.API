@@ -1,17 +1,12 @@
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\appsettings.json
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\CityInfo.API.exe
-C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\Final Report.pdf
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\CityInfo.API.deps.json
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\CityInfo.API.runtimeconfig.json
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\CityInfo.API.dll
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\CityInfo.API.pdb
-C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
-C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\Microsoft.OpenApi.dll
-C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\Newtonsoft.Json.dll
-C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\Serilog.dll
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\Serilog.AspNetCore.dll
 C:\Users\LebitaA\RiderProjects\CityInfo.API\CityInfo.API\bin\Debug\net6.0\Serilog.Extensions.Hosting.dll
