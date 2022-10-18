@@ -133,7 +133,7 @@ public sealed class CityInfoRepository : ICityInfoRespository
     {
         var existingPoi = await
             _db.PointsOfInterests
-                .SingleOrDefaultAsync(poi => poi.Id == updatePointOfInterestDto.Id);
+                .SingleOrDefaultAsync(poi => poi.Id == pointOfInterestId);
 
         ArgumentNullException.ThrowIfNull(existingPoi, nameof(existingPoi.Id));
 
