@@ -22,7 +22,7 @@ public sealed class CityInfoRepository : ICityInfoRespository
         if (city == null) return null;
 
         var pointOfInterestDtos = city.PointsOfInterest
-            .Select(poi => new PointOfInterestDto(poi.Id, poi.Name){ Description = poi.Description});
+            .Select(poi => new PointOfInterestDto(poi.Id, poi.Name) {Description = poi.Description});
 
         return new CityDto(city.Id, city.Name, pointOfInterestDtos)
         {
@@ -30,9 +30,13 @@ public sealed class CityInfoRepository : ICityInfoRespository
         };
     }
 
-    public async Task<IEnumerable<CityDto>> GetCities()
+    public async Task<IEnumerable<CityDto>> GetCities(int pageNumber, int pageSize)
     {
-        var cities = await _db.Cities.Include(c => c.PointsOfInterest).OrderBy(c => c.Name).ToListAsync();
+        var cities = await _db.Cities.Include(c => c.PointsOfInterest)
+            .OrderBy(c => c.Name)
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize)
+            .ToListAsync();
 
         return cities.Count == 0
             ? Enumerable.Empty<CityDto>()
@@ -44,30 +48,41 @@ public sealed class CityInfoRepository : ICityInfoRespository
             });
     }
 
-    public Task<IEnumerable<CityDto>> GetCitiesWithFilter(CitiesFilterDto citiesFilter)
+    public async Task<IEnumerable<CityDto>> GetCitiesWithFilter(CitiesFilterDto citiesFilter, int pageNumber, int pageSize)
     {
         var cityName = citiesFilter.Name;
-        
-        var cities = _db.Cities.Include(c => c.PointsOfInterest).AsQueryable();
+
+        IEnumerable<City> cities;
 
         if (string.IsNullOrEmpty(cityName) != true)
         {
-            cities = cities.Where(c => c.Name == cityName.Trim());
+            cities = _db.Cities.Include(c => c.PointsOfInterest)
+                .Where(c => c.Name == cityName.Trim() || 
+                            c.Description != null && c.Description.Contains(cityName.Trim()))
+                .OrderBy(c => c.Name)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .AsEnumerable();
         }
-
-        if (!cities.Any()) return Task.FromResult(Enumerable.Empty<CityDto>());
+        else
+        {
+            cities = _db.Cities.Include(c => c.PointsOfInterest)
+                .OrderBy(c => c.Name)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .AsEnumerable();
+        }
         
-        var filteredCities = new List<CityDto>(); 
-        
+        var filteredCities = new List<CityDto>();
         foreach (var city in cities)
         {
             var poi = city.PointsOfInterest
                 .Select(poi => new PointOfInterestDto(poi.Id, poi.Name) {Description = poi.Description});
-                
+
             filteredCities.Add(new CityDto(city.Id, city.Name, poi) {Description = city.Description});
         }
 
-        return Task.FromResult(filteredCities.AsEnumerable());
+        return filteredCities;
     }
 
     public async Task<PointOfInterestDto?> GetPointOfInterestById(Guid pointOfInterestId)
@@ -82,7 +97,7 @@ public sealed class CityInfoRepository : ICityInfoRespository
     public async Task<IEnumerable<PointOfInterestDto>> GetPointsOfInterestByCityId(Guid cityId)
     {
         var pois = await _db.PointsOfInterests.Where(poi => poi.CityId == cityId).ToListAsync();
-        
+
         return pois.Count == 0
             ? Enumerable.Empty<PointOfInterestDto>()
             : pois.Select(poi => new PointOfInterestDto(poi.Id, poi.Name) {Description = poi.Description});
@@ -97,7 +112,8 @@ public sealed class CityInfoRepository : ICityInfoRespository
             : pois.Select(poi => new PointOfInterestDto(poi.Id, poi.Name) {Description = poi.Description});
     }
 
-    public async Task<PointOfInterestDto> CreateNewPointOfInterest(Guid cityId, CreatePointOfInterestDto createPointOfInterestDto)
+    public async Task<PointOfInterestDto> CreateNewPointOfInterest(Guid cityId,
+        CreatePointOfInterestDto createPointOfInterestDto)
     {
         var newPointOfInterest = new PointOfInterest
         {
@@ -109,20 +125,21 @@ public sealed class CityInfoRepository : ICityInfoRespository
         await _db.PointsOfInterests.AddAsync(newPointOfInterest);
         await _db.SaveChangesAsync();
 
-        return new PointOfInterestDto(newPointOfInterest.Id, newPointOfInterest.Name){ Description = newPointOfInterest.Description};
+        return new PointOfInterestDto(newPointOfInterest.Id, newPointOfInterest.Name)
+            {Description = newPointOfInterest.Description};
     }
 
     public async Task UpdatePointOfInterest(Guid pointOfInterestId, UpdatePointOfInterestDto updatePointOfInterestDto)
     {
-        var existingPoi = await 
+        var existingPoi = await
             _db.PointsOfInterests
-            .SingleOrDefaultAsync(poi => poi.Id == pointOfInterestId);
+                .SingleOrDefaultAsync(poi => poi.Id == updatePointOfInterestDto.Id);
 
         ArgumentNullException.ThrowIfNull(existingPoi, nameof(existingPoi.Id));
 
         existingPoi.Name = updatePointOfInterestDto.Name;
         existingPoi.Description = updatePointOfInterestDto.Description;
-        
+
         await _db.SaveChangesAsync();
     }
 
