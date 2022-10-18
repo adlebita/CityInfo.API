@@ -129,7 +129,7 @@ public sealed class CityInfoRepository : ICityInfoRespository
             {Description = newPointOfInterest.Description};
     }
 
-    public async Task UpdatePointOfInterest(UpdatePointOfInterestDto updatePointOfInterestDto)
+    public async Task UpdatePointOfInterest(Guid pointOfInterestId, UpdatePointOfInterestDto updatePointOfInterestDto)
     {
         var existingPoi = await
             _db.PointsOfInterests
@@ -140,6 +140,27 @@ public sealed class CityInfoRepository : ICityInfoRespository
         existingPoi.Name = updatePointOfInterestDto.Name;
         existingPoi.Description = updatePointOfInterestDto.Description;
 
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task DeletePointOfInterest(Guid pointOfInterestId)
+    {
+        var poi = await _db.PointsOfInterests.SingleOrDefaultAsync(poi => poi.Id == pointOfInterestId);
+        
+        ArgumentNullException.ThrowIfNull(poi, nameof(poi.Id));
+
+        _db.PointsOfInterests.Remove(poi);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task UpdatePointOfInterestDescription(Guid pointOfInterestId,
+        UpdatePointOfInterestDescriptionDto updatePointOfInterestDescriptionDto)
+    {
+        var poi = await _db.PointsOfInterests.SingleOrDefaultAsync(poi => poi.Id == pointOfInterestId);
+        
+        ArgumentNullException.ThrowIfNull(poi, nameof(poi.Id));
+
+        poi.Description = updatePointOfInterestDescriptionDto.Description;
         await _db.SaveChangesAsync();
     }
 

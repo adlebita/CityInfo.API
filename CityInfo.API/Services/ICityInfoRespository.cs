@@ -19,7 +19,11 @@ public interface ICityInfoRespository
 
     public Task<PointOfInterestDto> CreateNewPointOfInterest(Guid cityId, CreatePointOfInterestDto createPointOfInterestDto);
 
-    public Task UpdatePointOfInterest(UpdatePointOfInterestDto updatePointOfInterestDto);
+    public Task UpdatePointOfInterest(Guid pointOfInterestId, UpdatePointOfInterestDto updatePointOfInterestDto);
+
+    public Task DeletePointOfInterest(Guid pointOfInterestId);
+    
+    Task UpdatePointOfInterestDescription(Guid pointOfInterestId, UpdatePointOfInterestDescriptionDto updatePointOfInterestDescriptionDto);
 
     public Task<bool> DoesCityExist(Guid cityId);
 
