@@ -7,9 +7,9 @@ public interface ICityInfoRespository
 {
     public Task<CityDto?> GetCityById(Guid cityId);
     
-    public Task<IEnumerable<CityDto>> GetCities();
+    public Task<IEnumerable<CityDto>> GetCities(int pageNumber, int pageSize);
     
-    public Task<IEnumerable<CityDto>> GetCitiesWithFilter(CitiesFilterDto citiesFilter);
+    public Task<IEnumerable<CityDto>> GetCitiesWithFilter(CitiesFilterDto citiesFilter, int pageNumber, int pageSize);
 
     public Task<PointOfInterestDto?> GetPointOfInterestById(Guid pointOfInterestId);
     

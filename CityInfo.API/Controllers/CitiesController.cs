@@ -10,6 +10,7 @@ namespace CityInfo.API.Controllers;
 public class CitiesController : ControllerBase
 {
     private readonly ICityInfoRespository _cityInfoRespository;
+    private const int MaxPageSize = 10;
 
     public CitiesController(ICityInfoRespository cityInfoRespository)
     {
@@ -17,11 +18,10 @@ public class CitiesController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CityDto>>> GetCities([FromQuery] CitiesFilterDto? citiesFilter)
+    public async Task<ActionResult<IEnumerable<CityDto>>> GetCities([FromQuery] CitiesFilterDto citiesFilter, 
+        [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1)
     {
-        return citiesFilter == null 
-            ? Ok(await _cityInfoRespository.GetCities()) 
-            : Ok(await _cityInfoRespository.GetCitiesWithFilter(citiesFilter));
+        return Ok(await _cityInfoRespository.GetCitiesWithFilter(citiesFilter, pageNumber, pageSize));
     }
 
     [HttpGet("{id}")]
