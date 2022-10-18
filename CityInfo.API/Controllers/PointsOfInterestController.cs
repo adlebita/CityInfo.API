@@ -77,8 +77,6 @@ public class PointsOfInterestController : ControllerBase
 
         await _cityInfoRespository.DeletePointOfInterest(pointOfInterestId);
         
-        _mailService.Send("PoI Deleted", $"Point of Interest Id: {pointOfInterestId} was deleted.");
-    
         return NoContent();
     }
 
