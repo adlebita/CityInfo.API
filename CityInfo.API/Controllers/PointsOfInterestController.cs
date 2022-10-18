@@ -25,7 +25,8 @@ public class PointsOfInterestController : ControllerBase
 
         if (cityExists == false)
         {
-            _logger.LogError($"City '{cityId}' could not be found.");
+            //Todo: Implement proper pipeline logging with SeriLog
+            _logger.LogError($"City '{cityId}' could not be found."); 
             return NotFound();
         }
 
@@ -58,25 +59,48 @@ public class PointsOfInterestController : ControllerBase
     [HttpPut("{pointOfInterestId:Guid}")]
     public async Task<ActionResult> UpdatePointOfInterest(UpdatePointOfInterestDto updatePointOfInterestDto, Guid cityId, Guid pointOfInterestId)
     {
-        var doesPoIExist = await _cityInfoRespository.DoesPointOfInterestExist(updatePointOfInterestDto.Id);
+        var doesPoIExist = await _cityInfoRespository.DoesPointOfInterestExist(pointOfInterestId);
 
-        if (doesPoIExist == false)
-        {
-            return NotFound();
-        }
-
-        updatePointOfInterestDto.Id = pointOfInterestId;
-        await _cityInfoRespository.UpdatePointOfInterest(updatePointOfInterestDto);
+        if (doesPoIExist == false) return NotFound();
+        
+        await _cityInfoRespository.UpdatePointOfInterest(pointOfInterestId, updatePointOfInterestDto);
     
         return NoContent();
     }
     
+    [HttpDelete("{pointOfInterestId:Guid}")]
+    public async Task<ActionResult> DeletePointOfInterest(Guid cityId, Guid pointOfInterestId)
+    {
+        var doesPoIExist = await _cityInfoRespository.DoesPointOfInterestExist(pointOfInterestId);
+
+        if (doesPoIExist == false) return NotFound();
+
+        await _cityInfoRespository.DeletePointOfInterest(pointOfInterestId);
+        
+        _mailService.Send("PoI Deleted", $"Point of Interest Id: {pointOfInterestId} was deleted.");
     
-    
-    
-    //
-    //
+        return NoContent();
+    }
+
+    [HttpPatch("{pointOfInterestId:Guid}")]
+    public async Task<ActionResult> UpdatePointOfInterestDescription(Guid pointOfInterestId, UpdatePointOfInterestDescriptionDto updatePointOfInterestDescriptionDto)
+    {
+        var doesPoIExist = await _cityInfoRespository.DoesPointOfInterestExist(pointOfInterestId);
+
+        if (doesPoIExist == false) return NotFound();
+
+        await _cityInfoRespository.UpdatePointOfInterestDescription(pointOfInterestId, updatePointOfInterestDescriptionDto);
+
+        return NoContent();
+    }
+
     // /**
+    //  * 12/10/2022 - I don't like this method of patching. See UpdatePoIDescription action method instead for implementation
+    //  * of HTTP Patch. Have left this in for reference. Consider using PATCH, if necessary and ideally for entities with 
+    //  * properties that can be patched... but for this project is too cumbersome. Remember, using PUT instead of PATCH while no
+    //  * no one will pull up for it, it's not in line with REST API architecture.
+    //  * https://stackoverflow.com/questions/19732423/why-isnt-http-put-allowed-to-do-partial-updates-in-a-rest-api
+    //  *
     //  * This Patch endpoint uses the following packages for Patch protocols:
     //  * "Microsoft.AspNetCore.JsonPatch" Version="6.0.8"
     //  * "Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.8"
@@ -119,22 +143,5 @@ public class PointsOfInterestController : ControllerBase
     //     return NoContent();
     // }
     //
-    // [HttpDelete("{pointOfInterestId:int}")]
-    // public ActionResult DeletePointOfInterest(int cityId, int pointOfInterestId)
-    // {
-    //     var city = _citiesDataStore.Cities.SingleOrDefault(x => x.Id == cityId);
-    //
-    //     if (city == null)
-    //         return NotFound();
-    //
-    //     var pointOfInterest = city.PointsOfInterest.SingleOrDefault(x => x.Id == pointOfInterestId);
-    //
-    //     if (pointOfInterest == null)
-    //         return NotFound();
-    //
-    //     city.PointsOfInterest.Remove(pointOfInterest);
-    //     _mailService.Send("PoI Deleted", $"Point of Interest Id: {pointOfInterestId} was deleted from {city.Name}");
-    //
-    //     return NoContent();
-    // }
+    
 }
