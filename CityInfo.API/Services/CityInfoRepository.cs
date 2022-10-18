@@ -44,6 +44,32 @@ public sealed class CityInfoRepository : ICityInfoRespository
             });
     }
 
+    public Task<IEnumerable<CityDto>> GetCitiesWithFilter(CitiesFilterDto citiesFilter)
+    {
+        var cityName = citiesFilter.Name;
+        
+        var cities = _db.Cities.Include(c => c.PointsOfInterest).AsQueryable();
+
+        if (string.IsNullOrEmpty(cityName) != true)
+        {
+            cities = cities.Where(c => c.Name == cityName.Trim());
+        }
+
+        if (!cities.Any()) return Task.FromResult(Enumerable.Empty<CityDto>());
+        
+        var filteredCities = new List<CityDto>(); 
+        
+        foreach (var city in cities)
+        {
+            var poi = city.PointsOfInterest
+                .Select(poi => new PointOfInterestDto(poi.Id, poi.Name) {Description = poi.Description});
+                
+            filteredCities.Add(new CityDto(city.Id, city.Name, poi) {Description = city.Description});
+        }
+
+        return Task.FromResult(filteredCities.AsEnumerable());
+    }
+
     public async Task<PointOfInterestDto?> GetPointOfInterestById(Guid pointOfInterestId)
     {
         var poi = await _db.PointsOfInterests.FirstOrDefaultAsync(poi => poi.Id == pointOfInterestId);

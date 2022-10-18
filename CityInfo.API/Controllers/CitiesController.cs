@@ -1,3 +1,4 @@
+using CityInfo.API.Models.Requests;
 using CityInfo.API.Models.Responses;
 using CityInfo.API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +17,11 @@ public class CitiesController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CityDto>>> GetCities()
+    public async Task<ActionResult<IEnumerable<CityDto>>> GetCities([FromQuery] CitiesFilterDto? citiesFilter)
     {
-        return Ok(await _cityInfoRespository.GetCities());
+        return citiesFilter == null 
+            ? Ok(await _cityInfoRespository.GetCities()) 
+            : Ok(await _cityInfoRespository.GetCitiesWithFilter(citiesFilter));
     }
 
     [HttpGet("{id}")]

@@ -20,9 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Final Report.pdf">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Remove="Logs\cityinfo20220910.txt" />
     </ItemGroup>
 
@@ -35,12 +32,6 @@
       <Compile Remove="Models\PointOfInterestForUpdateDto.cs" />
       <Compile Remove="Models\PointOfInterestCreationDto.cs" />
       <Compile Remove="Models\PointOfInterestDto.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Services\IMailService.cs">
-        <DependentUpon>LocalMailService.cs</DependentUpon>
-      </Compile>
     </ItemGroup>
 
 </Project>
