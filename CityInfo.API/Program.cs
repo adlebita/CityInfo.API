@@ -17,6 +17,7 @@ builder.Services.AddControllers(options => { options.ReturnHttpNotAcceptable = t
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICityInfoRespository, CityInfoRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 /*
  * Connection string: https://learn.microsoft.com/en-us/aspnet/mvc/overview/getting-started/introduction/creating-a-connection-string
@@ -24,6 +25,12 @@ builder.Services.AddScoped<ICityInfoRespository, CityInfoRepository>();
 builder.Services.AddDbContext<CityInfoContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("CityInfoContext");
+    options.UseSqlServer(connectionString);
+});
+
+builder.Services.AddDbContext<UserInfoContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("UserContext");
     options.UseSqlServer(connectionString);
 });
 
