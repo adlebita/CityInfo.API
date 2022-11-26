@@ -6,11 +6,11 @@ namespace CityInfo.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class Authentication : ControllerBase
+public class AuthenticationController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
 
-    public Authentication(IUserRepository userRepository)
+    public AuthenticationController(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
@@ -18,7 +18,8 @@ public class Authentication : ControllerBase
     [HttpPost("authenticate")]
     public async Task<ActionResult<string>> Authenticate(AuthenticateRequestBody request)
     {
-        var isAuthenticated = await _userRepository.AuthenticateUser(request.Email, request.Password);
-        return Ok();
+        var jwtToken = await _userRepository.AuthenticateUser(request.Email, request.Password);
+
+        return jwtToken != null ? Ok(jwtToken) : Unauthorized();
     }
 }
