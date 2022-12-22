@@ -1,6 +1,8 @@
+using System.Text;
 using CityInfo.API.Database;
 using CityInfo.API.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +36,26 @@ builder.Services.AddDbContext<UserInfoContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
+//Adding authentication scheme. Here we use AddJwtBearer, out of the box comes loaded.
+//We configure the scheme with the JWT options. In this case, when a token comes in:
+//We validate, the issuer of the token, audience and signing key. When adding fields to be validated, the scheme needs
+//to know what to validate against... we specify this with ValidIssuer, ValidAudience and IssuerSigningKey.
+builder.Services
+    .AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Authentication:Issuer"],
+            ValidAudience = builder.Configuration["Authentication:Audience"],
+            IssuerSigningKey =
+                new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
+        };
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,6 +66,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
