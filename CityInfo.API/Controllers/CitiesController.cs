@@ -12,7 +12,6 @@ namespace CityInfo.API.Controllers;
 public class CitiesController : ControllerBase
 {
     private readonly ICityInfoRespository _cityInfoRespository;
-    private const int MaxPageSize = 10;
 
     public CitiesController(ICityInfoRespository cityInfoRespository)
     {
@@ -25,7 +24,8 @@ public class CitiesController : ControllerBase
     {
         return Ok(await _cityInfoRespository.GetCitiesWithFilter(citiesFilter, pageNumber, pageSize));
     }
-
+    
+    [Authorize(Policy = "UserMustBeAHolmes")]
     [HttpGet("{id}")]
     public async Task<ActionResult<CityDto>> GetCity(Guid id)
     {

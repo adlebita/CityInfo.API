@@ -1,6 +1,8 @@
 using System.Text;
 using CityInfo.API.Database;
 using CityInfo.API.Services;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -55,6 +57,18 @@ builder.Services
                 new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
         };
     });
+
+builder.Services.AddAuthorization(options =>
+    options.AddPolicy("UserMustBeAHolmes", policyBuilder =>
+    {
+        policyBuilder.RequireAuthenticatedUser();
+        policyBuilder.AddRequirements(new AssertionRequirement(context =>
+        {
+            var userName =
+                context.User.Claims.First(c => c.Type.Contains("Name", StringComparison.InvariantCultureIgnoreCase));
+            return userName.Value.Contains("holmes", StringComparison.InvariantCultureIgnoreCase);
+        }));
+    }));
 
 var app = builder.Build();
 
