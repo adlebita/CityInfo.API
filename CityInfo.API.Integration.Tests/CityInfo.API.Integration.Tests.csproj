@@ -26,4 +26,8 @@
       <Folder Include="Setup" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\CityInfo.API\CityInfo.API.csproj" />
+    </ItemGroup>
+
 </Project>

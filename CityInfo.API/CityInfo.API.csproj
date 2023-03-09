@@ -29,6 +29,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="CityInfo.API.Integration.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Compile Remove="Models\CityDto.cs" />
       <Compile Remove="Models\PointOfInterestForUpdateDto.cs" />
       <Compile Remove="Models\PointOfInterestCreationDto.cs" />
