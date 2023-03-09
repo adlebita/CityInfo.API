@@ -1,5 +1,6 @@
 using System.Net;
 using CityInfo.API.Integration.Tests.Setup.Authentication;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace CityInfo.API.Integration.Tests.Features.City;
@@ -25,8 +26,7 @@ public class GetCityByIdForbidden : IAsyncLifetime
     [Fact]
     public void Should_BeForbidden()
     {
-        Assert.False(_response.IsSuccessStatusCode);
-        Assert.Equal(HttpStatusCode.Forbidden, _response.StatusCode);
+        _response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
     public async Task DisposeAsync()

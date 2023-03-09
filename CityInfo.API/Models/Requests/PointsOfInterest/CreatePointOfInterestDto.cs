@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CityInfo.API.Models.Requests;
+namespace CityInfo.API.Models.Requests.PointsOfInterest;
 
 public class CreatePointOfInterestDto
 {

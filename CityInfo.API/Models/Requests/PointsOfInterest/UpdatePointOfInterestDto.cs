@@ -1,4 +1,4 @@
-namespace CityInfo.API.Models.Requests;
+namespace CityInfo.API.Models.Requests.PointsOfInterest;
 
 public class UpdatePointOfInterestDto
 {

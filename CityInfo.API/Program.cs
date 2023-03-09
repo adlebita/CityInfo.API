@@ -2,7 +2,6 @@ using System.Text;
 using CityInfo.API.Database;
 using CityInfo.API.Services;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -89,4 +88,7 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program { }
+namespace CityInfo.API
+{
+    public partial class Program { }
+}

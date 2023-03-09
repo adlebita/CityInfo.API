@@ -1,4 +1,4 @@
-namespace CityInfo.API.Models.Responses;
+namespace CityInfo.API.Models.Responses.PointsOfInterest;
 
 public sealed record PointOfInterestDto(Guid Id, string Name)
 {

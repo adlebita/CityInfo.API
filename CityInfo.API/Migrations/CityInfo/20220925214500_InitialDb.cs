@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CityInfo.API.Migrations
+namespace CityInfo.API.Migrations.CityInfo
 {
     public partial class InitialDb : Migration
     {

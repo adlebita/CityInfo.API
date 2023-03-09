@@ -1,7 +1,6 @@
-namespace CityInfo.API.Models.Requests;
+namespace CityInfo.API.Models.Requests.Cities;
 
 public sealed class CitiesFilterDto
 {
-    //Filter cities by Name
     public string? Name { get; set; } = null!;
 }

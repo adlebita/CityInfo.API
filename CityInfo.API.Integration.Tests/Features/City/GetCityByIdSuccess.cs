@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json;
 using CityInfo.API.Integration.Tests.Setup.Authentication;
 using CityInfo.API.Models.Responses;
+using CityInfo.API.Models.Responses.Cities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -23,7 +24,9 @@ public class GetCityByIdSuccess : IAsyncLifetime
 
         await _client.GetBearerToken("mycrofth@britain.uk", "123456");
 
-        _response = await _client.GetAsync("api/cities/FC1C76C4-3E26-4E90-9A07-35D42C9C2D74");
+        const string requestUri = "api/cities/fc1c76c4-3e26-4e90-9a07-35d42c9c2d74";
+        _response = await _client.GetAsync(requestUri);
+        
         var city = await _response.Content.ReadAsStringAsync();
         _city = JsonSerializer.Deserialize<CityDto>(city, new JsonSerializerOptions(JsonSerializerDefaults.Web));
     }
