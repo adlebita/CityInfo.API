@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json;
 using CityInfo.API.Integration.Tests.Setup.Authentication;
-using CityInfo.API.Models.Responses;
 using CityInfo.API.Models.Responses.Cities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;

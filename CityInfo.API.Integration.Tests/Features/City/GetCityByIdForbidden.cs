@@ -20,7 +20,8 @@ public class GetCityByIdForbidden : IAsyncLifetime
 
         await _client.GetBearerToken("mpenury@femblem.jp", "123456");
 
-        _response = await _client.GetAsync("api/cities/FC1C76C4-3E26-4E90-9A07-35D42C9C2D74");
+        const string requestUri = "api/cities/fc1c76c4-3e26-4e90-9a07-35d42c9c2d74";
+        _response = await _client.GetAsync(requestUri);
     }
 
     [Fact]

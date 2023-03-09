@@ -1,6 +1,4 @@
-using CityInfo.API.Models.Requests;
 using CityInfo.API.Models.Requests.PointsOfInterest;
-using CityInfo.API.Models.Responses;
 using CityInfo.API.Models.Responses.PointsOfInterest;
 using CityInfo.API.Services;
 using Microsoft.AspNetCore.Authorization;

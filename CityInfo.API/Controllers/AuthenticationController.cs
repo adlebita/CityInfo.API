@@ -1,4 +1,3 @@
-using CityInfo.API.Models.Requests;
 using CityInfo.API.Models.Requests.Authentication;
 using CityInfo.API.Services;
 using Microsoft.AspNetCore.Mvc;
