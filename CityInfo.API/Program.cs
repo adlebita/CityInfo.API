@@ -84,6 +84,8 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+//  This requires the builder.Services.AddControllers() invoked.
+//  This method allows, controller classes to be found/used without specifying.
 app.MapControllers();
 
 app.Run();
